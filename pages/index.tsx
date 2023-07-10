@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+declare var current: any;
+
+import { useState, useRef, useCallback } from "react";
 // config
 import { IMAGE_BASE_URL, BACKDROP_SIZE, POSTER_SIZE } from "../config";
 
@@ -16,11 +18,42 @@ import Spinner from "../components/Spinner";
 
 const Home: NextPage = () => {
   const [query, setQuery] = useState("");
-  const { data, fetchNextPage, isLoading, isFetching, error } =
-    useFetchMovies(query);
+  const {
+    data,
+    fetchNextPage,
+    isLoading,
+    isFetching,
+    error,
+    isFetchingNextPage,
+    hasNextPage,
+  } = useFetchMovies(query);
+
+  const intObserver = useRef<any>();
+  const lastPostRef = useCallback(
+    (post: any) => {
+      if (isFetchingNextPage) return;
+
+      if (intObserver.current) intObserver.current.disconnect();
+
+      intObserver.current = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting && hasNextPage) {
+            fetchNextPage();
+          }
+        },
+        { threshold: 1 }
+      );
+
+      if (post) intObserver.current.observe(post);
+    },
+    [isFetchingNextPage, fetchNextPage, hasNextPage]
+  );
+
   const handleScroll = (event: React.UIEvent<HTMLElement>) => {
     const { scrollTop, clientHeight, scrollHeight } = event.currentTarget;
-    if (scrollHeight - scrollTop === clientHeight) fetchNextPage();
+    if (scrollHeight - scrollTop === clientHeight) {
+      fetchNextPage();
+    }
   };
   if (error) {
     return <div>Something went wrong!!!</div>;
@@ -62,20 +95,41 @@ const Home: NextPage = () => {
         >
           {data && data.pages
             ? data.pages.map((page) =>
-                page.results.map((movie) => (
-                  <Link key={movie.id} href={`/${movie.id}`}>
-                    <div className="duration-300 cursor-pointer hover:opacity-80">
-                      <Card
-                        imgUrl={
-                          movie.poster_path
-                            ? `${IMAGE_BASE_URL}${POSTER_SIZE}${movie.poster_path}`
-                            : "/no_image.jpg"
-                        }
-                        title={movie.original_title}
-                      />
-                    </div>
-                  </Link>
-                ))
+                page.results.map((movie, i) => {
+                  if (page.results.length === i + 1) {
+                    return (
+                      <Link key={movie.id} href={`/${movie.id}`}>
+                        <div
+                          ref={lastPostRef}
+                          className="duration-300 cursor-pointer hover:opacity-80"
+                        >
+                          <Card
+                            imgUrl={
+                              movie.poster_path
+                                ? `${IMAGE_BASE_URL}${POSTER_SIZE}${movie.poster_path}`
+                                : "/no_image.jpg"
+                            }
+                            title={movie.original_title}
+                          />
+                        </div>
+                      </Link>
+                    );
+                  }
+                  return (
+                    <Link key={movie.id} href={`/${movie.id}`}>
+                      <div className="duration-300 cursor-pointer hover:opacity-80">
+                        <Card
+                          imgUrl={
+                            movie.poster_path
+                              ? `${IMAGE_BASE_URL}${POSTER_SIZE}${movie.poster_path}`
+                              : "/no_image.jpg"
+                          }
+                          title={movie.original_title}
+                        />
+                      </div>
+                    </Link>
+                  );
+                })
               )
             : null}
         </Grid>

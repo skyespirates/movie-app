@@ -1,4 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
+
 // Fetch function
 import { fetchMovies } from "./fetchFunction";
 // types
