@@ -39,9 +39,8 @@ const MovieInfo = ({
         </div>
       </div>
       <div className="w-full px-0 py-4 text-center text-white md:py-0 md:text-left md:px-8 mud:w-2/3">
-        <h2 className="pb-4 text-2xl font-bold md:text-4xl">
-          {title} ({year})
-        </h2>
+        <h2 className="pb-4 text-2xl font-bold md:text-4xl">{title}</h2>
+        <p>{year} &#8226; </p>
         <h3 className="text-lg font-bold">Summary</h3>
         <p className="mb-8 text-sm md:text-lg">{summary}</p>
         <div>
@@ -57,7 +56,7 @@ const MovieInfo = ({
           </div>
           <div className="mt-8">
             <h3 className="text-lg font-bold">Movie data</h3>
-            <Pill className="ml-0" text={`Running time: ${calcTime(time)}`} />
+            <Pill className="ml-0" text={`Duration: ${calcTime(time)}`} />
             <Pill text={`Budget: ${convertMoney(budget)}`} />
             <Pill text={`Revenue: ${convertMoney(revenue)}`} />
           </div>

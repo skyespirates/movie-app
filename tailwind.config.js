@@ -14,7 +14,7 @@ module.exports = {
       },
     },
     fontFamily: {
-      raleway: ["Raleway", "sans-serif"],
+      raleway: ["Poppins", "sans-serif"],
     },
     minHeight: {
       128: "40rem",
