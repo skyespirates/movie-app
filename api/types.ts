@@ -12,6 +12,8 @@ export type Movie = {
   runtime: number;
   revenue: number;
   release_date: string;
+  genres: { id: number; name: string }[];
+  spoken_languages: { english_name: string }[];
 };
 
 export type Movies = {

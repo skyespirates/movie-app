@@ -46,6 +46,8 @@ const Movie: NextPage<Props> = ({ movie, directors, cast }) => {
         time={movie.runtime}
         budget={movie.budget}
         revenue={movie.revenue}
+        genres={movie.genres}
+        spoken_languages={movie.spoken_languages}
       />
       <Grid className="p-4 m-auto max-w-7xl" title="Actors">
         {cast.map((actor) => (

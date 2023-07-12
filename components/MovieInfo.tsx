@@ -17,6 +17,8 @@ type Props = {
   time: number;
   budget: number;
   revenue: number;
+  genres: { id: number; name: string }[];
+  spoken_languages: { english_name: string }[];
 };
 const MovieInfo = ({
   thumbUrl,
@@ -29,6 +31,8 @@ const MovieInfo = ({
   time,
   budget,
   revenue,
+  genres,
+  spoken_languages,
 }: Props) => (
   <div className="relative w-full h-auto p-4">
     <div className="relative z-10 flex flex-col h-full p-4 m-auto min-h-128 md:flex-row max-w-7xl rounded-xl bg-zinc-800 bg-opacity-90">
@@ -40,7 +44,14 @@ const MovieInfo = ({
       </div>
       <div className="w-full px-0 py-4 text-center text-white md:py-0 md:text-left md:px-8 mud:w-2/3">
         <h2 className="pb-4 text-2xl font-bold md:text-4xl">{title}</h2>
-        <p>{year} &#8226; </p>
+        <p>
+          {year} &#8226; {spoken_languages[0].english_name}
+        </p>
+        <div>
+          {genres.map((genre) => (
+            <Pill key={genre.id} text={genre.name} />
+          ))}
+        </div>
         <h3 className="text-lg font-bold">Summary</h3>
         <p className="mb-8 text-sm md:text-lg">{summary}</p>
         <div>
